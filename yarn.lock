@@ -1967,11 +1967,6 @@
     "array-includes" "^3.1.2"
     "object.assign" "^4.1.2"
 
-"ky@^0.28.5":
-  "integrity" "sha512-O5gg9kF4MeyfSw+YkgPAafOPwEUU6xcdGEJKUJmKpIPbLzk3oxUtY4OdBNekG7mawofzkyZ/ZHuR9ev5uZZdAA=="
-  "resolved" "https://registry.npmjs.org/ky/-/ky-0.28.5.tgz"
-  "version" "0.28.5"
-
 "language-subtag-registry@~0.3.2":
   "integrity" "sha512-L0IqwlIXjilBVVYKFT37X9Ih11Um5NEl9cbJIuU/SwP/zEEAbBPOnEeeuxVMf45ydWQRDQN3Nqc96OgbH1K+Pg=="
   "resolved" "https://registry.npmjs.org/language-subtag-registry/-/language-subtag-registry-0.3.21.tgz"
