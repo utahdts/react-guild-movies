@@ -56,7 +56,7 @@ export default function Home() {
               </a>
             </Link>
             <p className="text-xs tracking-tight text-center text-gray-500 uppercase">
-              {movie.authors.map((author) => (
+              {movie.authors?.map((author) => (
                 <span key={author}>{author}</span>
               ))}
             </p>
@@ -66,7 +66,7 @@ export default function Home() {
             <p className="mt-2 mb-6 text-sm text-gray-500">
               {movie.description}
             </p>
-            {movie.tags.map((tag) => (
+            {movie.tags?.map((tag) => (
               <span
                 key={tag}
                 className="px-2 py-1 mx-1 text-xs text-white bg-indigo-600 rounded-full"
