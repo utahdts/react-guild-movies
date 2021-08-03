@@ -5,5 +5,8 @@
 @layer base {
 [type='button'] {
   @apply px-4 py-2 font-medium text-white bg-gray-800 border border-transparent rounded-md shadow-sm hover:bg-blue-800 hover:cursor-pointer;
+},
+select {
+  @apply mt-0 text-gray-500 block w-full px-0.5 border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-gray-800 disabled:bg-gray-100;
 }
 }
