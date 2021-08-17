@@ -1,11 +1,20 @@
+import produce from 'immer';
 import { useState, useEffect } from 'react';
 
-export default (movies, sortMethod) => {
+const useMoviesSorting = (movies, sortMethod) => {
   const [sortedMovies, setSortedMovies] = useState(movies);
 
   useEffect(() => {
-    setSortedMovies(movies.sort(sortMethod));
+    setSortedMovies(
+        produce(
+            movies,
+            draftMovies => void(
+                draftMovies.sort(sortMethod)
+            )
+        )
+    );
   }, [movies, sortMethod]);
-
   return sortedMovies;
 };
+
+export default useMoviesSorting;

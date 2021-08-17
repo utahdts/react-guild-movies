@@ -17,6 +17,7 @@ const sorter = [
 ];
 
 export default function Home() {
+  // todo: move useEffects to hooks
   useEffect(() => {
     async function loadData() {
       const response = await fetch("/api/movies", { method: "get" });
@@ -29,10 +30,18 @@ export default function Home() {
   }, []);
 
   const [movies, setMovies] = useState([]);
+  const [filteredMovies, setFilteredMovies] = useState(movies);
+
+
   const [searchText, setSearchText] = useState("");
   const search = () => console.log(searchText);
   const [sortValue, setSortValue] = useState(sorter[1].value);
-  const sortedMovies = useMoviesSorting(movies, sorter.find(sort => sort.value === sortValue).sorter);
+  const sortedMovies = useMoviesSorting(filteredMovies, sorter.find(sort => sort.value === sortValue).sorter);
+
+  useEffect(() => {
+    //todo: change to google like searching...
+    setFilteredMovies(movies.filter(movie => movie.name.toLowerCase().includes(searchText.toLowerCase())));
+  }, [movies, searchText]);
 
   return (
     <div>
@@ -87,7 +96,8 @@ export default function Home() {
                     : undefined
                 }
                 <a className="text-lg text-center hover:text-indigo-800 hover:cursor-pointer">
-                  {movie.name}
+                  {movie.name}<br/>
+                  {movie.createdTime}
                 </a>
               </div>
             </Link>
