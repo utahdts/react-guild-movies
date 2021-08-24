@@ -2,6 +2,7 @@ import Head from "next/head";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import useMoviesSorting from "./useMoviesSorting";
+import useMoviesFetcher from "./hooks/useMoviesFetcher";
 
 const sorter = [
   {
@@ -17,19 +18,7 @@ const sorter = [
 ];
 
 export default function Home() {
-  // todo: move useEffects to hooks
-  useEffect(() => {
-    async function loadData() {
-      const response = await fetch("/api/movies", { method: "get" });
-      const data = await response.json();
-
-      setMovies(data);
-    }
-
-    loadData();
-  }, []);
-
-  const [movies, setMovies] = useState([]);
+  const [movies] = useMoviesFetcher();
   const [filteredMovies, setFilteredMovies] = useState(movies);
 
 

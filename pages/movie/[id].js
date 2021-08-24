@@ -10,6 +10,7 @@ const defaultProps = {
 export default function Movie({ id: movieId }) {
     const [movie, setMovie] = useState(null);
 
+    // TODO: Move useEffect to a hook
     useEffect(() => {
         fetch(`/api/movie/${movieId}`, { method: "get" })
             .then(data => data.json())
