@@ -1,15 +1,19 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 
-export default function useMoviesFetcher(existingMovies = []) {
-    const [movies, setMovies] = useState(existingMovies);
+export default function useMoviesFetcher() {
+    const { data: movies } = useQuery(
+        ['allMovies'],
+        () => fetch(`/api/movies`)
+            .then(res => res.json())
+            .then(movies => {
+                // lowercasing name for more optimized searching
+                movies.forEach(movie => movie.nameLowerCase = movie.name.toLowerCase());
 
-    useEffect(() => {
-        (async () => {
-            const response = await fetch("/api/movies", { method: "get" });
-            const data = await response.json();
-            setMovies(data);
-        })();
-    }, []);
-
-    return [movies, setMovies];
+                return movies;
+            }),
+        {
+            onError: error => console.error(error),
+        }
+    );
+    return [movies || []];
 };

@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import PropTypes from "prop-types";
-import { useQuery } from 'react-query';
 import produce from 'immer';
+import PropTypes from "prop-types";
+import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import { useRouter } from "next/router"
 
 const propTypes = {
     id: PropTypes.string.isRequired,
@@ -10,14 +11,19 @@ const defaultProps = {
 };
 
 export default function Movie({ id: movieId }) {
+    const router = useRouter()
+    const [movie, setMovie] = useState(null);
     const { isLoading, error, data: movieFromQuery } = useQuery(
         ['fetchSingleMovie', movieId],
-        () => fetch(`/api/movie/${movieId}`).then(res => res.json())
+        () => fetch(`/api/movie/${movieId}`).then(res => res.json()),
+        {
+            enabled: movieId?.length > 0,
+            onSuccess: (movieFromQuery) => {
+                setMovie(movieFromQuery);
+            },
+            onError: error => console.error(error),
+        }
     );
-    const [movie, setMovie] = useState(null);
-    useEffect(() => {
-        setMovie(movieFromQuery);
-    }, [movieFromQuery]);
 
     const changeField = field => e => setMovie(produce(draft => {
         draft[field] = e.target.value;
@@ -27,7 +33,10 @@ export default function Movie({ id: movieId }) {
         movie ? (
             <form className="w-1/2 p-10 mx-auto" action="#" method="POST">
                 <div className="mb-4">
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                    <input className="text-xs" type="button" value="&larr; Go Back Home" onClick={() => router.back()} />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="name" className="block text-xl font-medium text-gray-700">
                         Name
                     </label>
                     <input
@@ -35,7 +44,7 @@ export default function Movie({ id: movieId }) {
                         name="title"
                         id="title"
                         value={movie?.title ?? ''}
-                        className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        className="text-2xl block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                         onChange={changeField('title')}
                     />
                 </div>
