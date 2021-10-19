@@ -1,53 +1,41 @@
-const fs = require('fs');
-const readline = require('readline');
-const { google } = require('googleapis');
+import googleDrive from '../../src/apiTools/googleDrive';
 
 export default function handler(req, res) {
 
-
-  const auth = new google.auth.GoogleAuth({
-    keyFile: '/Users/austinhaws/htdocs/dts/react-guild/react-guild-movies/react-guild-recordings | ut-dts-fantasy-bracket-at-0d5f47b26592.json',
-    scopes: [
-      'https://www.googleapis.com/auth/drive.metadata',
-      'https://www.googleapis.com/auth/drive.readonly',
-    ],
-  });
-
-  const drive = google.drive({ version: 'v3', auth });
-  const fields = [
-    'id',
-    'name',
-    'mimeType',
-    'webContentLink',
-    'webViewLink',
-    'iconLink',
-    'hasThumbnail',
-    'thumbnailLink',
-    'createdTime',
-    'originalFilename',
-    'fullFileExtension',
-    'size',
-    'videoMediaMetadata'
-  ];
-  drive.files.list({
-    fields: `files(${fields})`,
-    orderBy: 'createdTime desc',
-  }, (error, driveResponse) => {
-    if (error) {
-      throw 'The API returned an error: ' + error;
-    }
-
-    const mimeTypeKeepers = [
-      'video/mp4',
-      'text/plain',
-      //   'application/vnd.google-apps.folder'
+    const fields = [
+        'id',
+        'name',
+        'mimeType',
+        'webContentLink',
+        'webViewLink',
+        'iconLink',
+        'hasThumbnail',
+        'thumbnailLink',
+        'createdTime',
+        'originalFilename',
+        'fullFileExtension',
+        'size',
+        'videoMediaMetadata'
     ];
+    googleDrive.files.list({
+        fields: `files(${fields})`,
+        orderBy: 'createdTime desc',
+    }, (error, driveResponse) => {
+        if (error) {
+            throw 'The API returned an error: ' + error;
+        }
 
-    res.status(200).json(
-      (driveResponse.data.files || [])
-        .filter(movie => mimeTypeKeepers.includes(movie.mimeType))
-    );
-  });
+        const mimeTypeKeepers = [
+            'video/mp4',
+            'text/plain',
+            //   'application/vnd.google-apps.folder'
+        ];
+
+        res.status(200).json(
+            (driveResponse.data.files || [])
+                .filter(movie => mimeTypeKeepers.includes(movie.mimeType))
+        );
+    });
 }
 /*
 {
