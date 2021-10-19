@@ -21,11 +21,13 @@ export default function Movie({ id: movieId }) {
 
     useEffect(
         () => {
-            if (movie?.tags) {
-                setTagsArray((movie.tags || '').split(separator).filter(identity));
+            if (movie?.properties?.tags) {
+                setTagsArray((movie.properties?.tags || '').split(separator).filter(identity));
+            } else {
+                setTagsArray([]);
             }
         },
-        [movie?.tags]
+        [movie?.properties?.tags]
     );
 
     useQuery(
@@ -34,7 +36,9 @@ export default function Movie({ id: movieId }) {
             .then(res => res.json())
             .then(movie => {
                 // translate movie fields for the UI
-                movie.properties && (movie.properties.presenter = []);//movie.presenter ? JSON.parse(movie.presenter) : [];
+                movie.properties = movie.properties || {};
+                // TODO: get presenters working
+                // movie.properties && (movie.properties.presenter = []);//movie.presenter ? JSON.parse(movie.presenter) : [];
                 return movie;
             }),
         {
@@ -46,8 +50,8 @@ export default function Movie({ id: movieId }) {
 
     const { mutate: saveMovie } = useMutation(
         data => {
-            const saveData = { ...data };
-            saveData.properties && (saveData.properties.presenter = JSON.stringify(saveData?.properties?.presenter || []));
+            // const saveData = { ...data };
+            // saveData.properties && (saveData.properties.presenter = JSON.stringify(saveData?.properties?.presenter || []));
 
             return fetch(
                 `/api/movie/${movieId}`,
@@ -155,26 +159,19 @@ export default function Movie({ id: movieId }) {
                     <CharacterSeparatedPills
                         pillTexts={tagsArray}
                         separator={separator}
-                        onAddPill={newPillText => setTagsArray(produce(draftTags => {
-                            draftTags.push(newPillText);
+                        onAddPill={newPillText => setMovie(produce(draftMovie => {
+                            if (draftMovie.properties?.tags) {
+                                draftMovie.properties.tags += separator + newPillText;
+                            } else {
+                                draftMovie.properties.tags = newPillText;
+                            }
                         }))}
                         onRemovePill={pillIdx => {
-                            setTagsArray(produce(draftTags => {
-                                draftTags.splice(pillIdx, 1);
+                            setMovie(produce(draftMovie => {
+                                draftMovie.properties.tags = tagsArray.filter((_, i) => i !== pillIdx).join(separator);
                             }));
-                            todo: set back in to movie
-                            draftMovie.tags = tagsArray.splice(pillIdx, 1);
                         }}
                     />
-                    {/* TODO: Change to an array picker */}
-                    {/* <input
-                        type="text"
-                        name="tags"
-                        id="tags"
-                        value={movie?.tags?.join(', ') ?? ''}
-                        className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        onChange={changeField('tags')}
-                    /> */}
                 </div>
 
                 <div className="mb-4">
@@ -190,7 +187,10 @@ export default function Movie({ id: movieId }) {
                         onChange={changeField('comments')}
                     />
                 </div>
-
+                <div>
+                    {/* TODO: show movie component to view movie */}
+                    webViewLink: {movie.webViewLink}
+                </div>
                 <div className="mb-4">
                     <button onClick={save}>Save</button>
                 </div>

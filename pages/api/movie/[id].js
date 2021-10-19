@@ -8,6 +8,8 @@ export default async function handler({ method, query, body }, res) {
         fileId: body.id,
         resource: {
           properties: body.properties,
+          name: body.name,
+          // ...body
         },
         fields: 'id, properties',
       })
