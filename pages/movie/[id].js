@@ -18,6 +18,7 @@ export default function Movie({ id: movieId }) {
     const router = useRouter()
     const [movie, setMovie] = useState(null);
     const [tagsArray, setTagsArray] = useState([]);
+    const [presentersArray, setPresentersArray] = useState([]);
 
     useEffect(
         () => {
@@ -30,6 +31,17 @@ export default function Movie({ id: movieId }) {
         [movie?.properties?.tags]
     );
 
+    useEffect(
+        () => {
+            if (movie?.properties?.presenters) {
+              setPresentersArray((movie?.properties?.presenters || '').split(separator).filter(identity));
+            } else {
+              setPresentersArray([]);
+            }
+        },
+        [movie?.properties?.presenters]
+    );
+
     useQuery(
         ['fetchSingleMovie', movieId],
         () => fetch(`/api/movie/${movieId}`)
@@ -37,7 +49,6 @@ export default function Movie({ id: movieId }) {
             .then(movie => {
                 // translate movie fields for the UI
                 movie.properties = movie.properties || {};
-                // TODO: get presenters working
                 // movie.properties && (movie.properties.presenter = []);//movie.presenter ? JSON.parse(movie.presenter) : [];
                 return movie;
             }),
@@ -138,19 +149,26 @@ export default function Movie({ id: movieId }) {
                 </div>
 
                 <div className="mb-4">
-                    <label htmlFor="presenter" className="block text-sm font-medium text-gray-700">
-                        Presenters
+                    <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
+                      Presenters
                     </label>
-                    <div>
-                        <ul>
-                            {
-                                (movie?.properties?.presenter || []).map(presenter => (
-                                    <li key={presenter.name}>{presenter.name}</li>
-                                ))
+                    <CharacterSeparatedPills
+                        pillTexts={presentersArray}
+                        separator={separator}
+                        onAddPill={newPillText => setMovie(produce(draftMovie => {
+                            if (draftMovie.properties?.presenters) {
+                                draftMovie.properties.presenters += separator + newPillText;
+                            } else {
+                                draftMovie.properties.presenters = newPillText;
                             }
-                        </ul>
-                    </div>
-                </div >
+                        }))}
+                        onRemovePill={pillIdx => {
+                            setMovie(produce(draftMovie => {
+                                draftMovie.properties.presenters = presentersArray.filter((_, i) => i !== pillIdx).join(separator);
+                            }));
+                        }}
+                    />
+                </div>
 
                 <div className="mb-4">
                     <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
