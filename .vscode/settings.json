@@ -3,6 +3,7 @@
     "headlessui",
     "heroicons",
     "immer",
+    "packagejson",
     "tailwindcss"
   ]
 }

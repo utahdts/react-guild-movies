@@ -83,29 +83,29 @@ export default function Index() {
   return (
     <main className="text-slate-800">
       <section className="p-4">
-        <h1 className="p-2 text-6xl font-black text-sky-600 text-center">
+        <h1 className="p-2 text-center text-6xl font-black text-sky-600">
           React Guild Recordings
         </h1>
-        <div className="flex flex-row justify-center gap-4 mt-4">
+        <div className="mt-4 flex flex-row justify-center gap-4">
           <input
-            className="bg-white border border-slate-400 w-1/2 py-2 px-3 text-slate-800 placeholder-slate-400 shadow-sm transition-all duration-200 ease-in-out focus:border-sky-500 focus:outline-none focus:ring focus:ring-sky-600 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm rounded-md"
+            className="w-1/2 rounded-md border border-slate-400 bg-white py-2 px-3 text-slate-800 placeholder-slate-400 shadow-sm transition-all duration-200 ease-in-out focus:border-sky-500 focus:outline-none focus:ring focus:ring-sky-600 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
             type="text"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             placeholder="Search"
           />
           <input
-            className="rounded-full flex min-h-[2rem] cursor-pointer items-center justify-center border-2 px-7 py-1 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:opacity-50 border-sky-600 bg-sky-500 text-white hover:border-sky-700 hover:bg-sky-600 focus:border-sky-500 focus:ring-sky-600 active:bg-sky-700"
+            className="flex min-h-[2rem] cursor-pointer items-center justify-center rounded-full border-2 border-sky-600 bg-sky-500 px-7 py-1 text-white transition-all duration-200 ease-in-out hover:border-sky-700 hover:bg-sky-600 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-600 focus:ring-opacity-50 active:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-50"
             type="button"
             value="Search"
             onClick={search}
           />
         </div>
-        <div className="flex flex-row justify-center items-center gap-4 mt-4">
+        <div className="mt-4 flex flex-row items-center justify-center gap-4">
           <Listbox value={sortMethod} onChange={setSortMethod}>
             <Listbox.Label>Sort By</Listbox.Label>
             <div className="relative">
-              <Listbox.Button className="relative w-72 border border-slate-400 text-slate-800 cursor-default rounded-md bg-white py-2 pl-3 pr-10 text-left focus:border-sky-500 focus:outline-none focus:ring focus:ring-sky-600 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm">
+              <Listbox.Button className="relative w-72 cursor-default rounded-md border border-slate-400 bg-white py-2 pl-3 pr-10 text-left text-slate-800 focus:border-sky-500 focus:outline-none focus:ring focus:ring-sky-600 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm">
                 <span className="block truncate">{sortMethod.label}</span>
                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                   <SelectorIcon
@@ -158,14 +158,14 @@ export default function Index() {
           </Listbox>
         </div>
       </section>
-      <section className="max-w-6xl mx-auto">
-        <p className="font-bold text-3xl">Recording Collection</p>
-        <div className="justify-items-center grid grid-flow-row grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <section className="mx-auto max-w-6xl">
+        <p className="text-3xl font-bold">Recording Collection</p>
+        <div className="grid grid-flow-row grid-cols-1 justify-items-center gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {sortedRecordings.videos?.map((video: IRecording) => (
             <Recording video={video} key={video.id} />
           )) ?? (
-            <div className="flex col-span-4 text-amber-500 font-bold text-4xl mt-6 border border-amber-700 rounded px-20 py-16 mb-10">
-              <FilmIcon className="h-10 w-10 mr-4" /> No videos found
+            <div className="col-span-4 mt-6 mb-10 flex rounded border border-amber-700 px-20 py-16 text-4xl font-bold text-amber-500">
+              <FilmIcon className="mr-4 h-10 w-10" /> No videos found
             </div>
           )}
         </div>
